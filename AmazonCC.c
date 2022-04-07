@@ -20,7 +20,7 @@ typedef struct {
     Produto *primeiro;
     Produto *ultimo;
 
-} ElementProduto;
+} ListProduto;
 
 struct _Carrinho {
     int idCarrinho;
@@ -35,7 +35,8 @@ typedef struct {
     Carrinho *primeiro;
     Carrinho *ultimo;
 
-} ElementCarrinho;
+} ListCarrinho;
+
 
 void menu() {
     printf("-------------------------------------\n");
@@ -59,8 +60,6 @@ void menu() {
 
     printf("\t5 - Comprar Produtos\n");
     printf("-------------------------------------\n");
-
-
 }
 
 
@@ -80,7 +79,7 @@ void menuListar() {
 }
 
 
-int produtosNulo(ElementProduto *produtos) {
+int produtosNulo(ListProduto *produtos) {
     if(produtos->primeiro == NULL) {
         return TRUE;
     }else {
@@ -88,75 +87,87 @@ int produtosNulo(ElementProduto *produtos) {
     }
 }
 
-int carrinhoNulo(ElementCarrinho *carrinho) {
+
+int carrinhoNulo(ListCarrinho *carrinho) {
     if(carrinho->primeiro == NULL) {
         return TRUE;
     } else {
         return FALSE;
     }
-
-
-
 }
 
-void cadastroProdutos(ElementProduto *produtos) {
-    Produto *aux;
-    Produto *auxFor;
-    int flag = TRUE;
 
-    aux = malloc(sizeof(Produto));
-    auxFor = malloc(sizeof(Produto));
-    
+Produto *alocar_dados(){
+    Produto *novo_produto = (Produto*)malloc(sizeof(Produto));
+
     printf("-------------------------------------\n");
     printf("Digite o ID: ");
-    scanf("%d", &aux->id);
+    scanf("%d", &novo_produto->id);
     printf("\n");
 
     printf("-------------------------------------\n");
     printf("Digite a Descrição do Produto: ");
-    scanf("%s", &aux->nome);   
+    scanf("%s", novo_produto->nome);   
     printf("\n");
     
     printf("-------------------------------------\n");
     printf("Digite o Preço do Produto: ");
-    scanf("%lf", &aux->preco);
+    scanf("%lf", &novo_produto->preco);
     printf("\n");
  
     printf("-------------------------------------\n");
     printf("Digite a Quantidade do Produto: ");
-    scanf("%d", &aux->quantidade);
+    scanf("%d", &novo_produto->quantidade);
     printf("\n");
 
-    aux->proximo = NULL;
-    aux->anterior = NULL;
+    novo_produto->proximo = NULL;
+    novo_produto->anterior = NULL;
+    return novo_produto;
+}
 
-    if(produtos->primeiro == NULL) {
+
+void cadastroProdutos(ListProduto *produtos) {
+    Produto *aux = alocar_dados();
+    Produto *auxFor;
+    int inseriu = 0;
+
+    if(produtos->primeiro == NULL && produtos->ultimo == NULL) {
         produtos->primeiro = aux;
         produtos->ultimo = aux;
     
     }else {
-        auxFor = produtos->primeiro;
-        for(auxFor; auxFor!=NULL; auxFor=auxFor->proximo) {
-            if(auxFor->id == aux->id) {
-                printf("-------------------------------------\n");
-                printf("ID Utilizado !\n");
+        
+        for(auxFor = produtos->primeiro; auxFor != NULL; auxFor = auxFor->proximo){
+            if(auxFor->id == aux->id){
+                printf("ID invalido\n");
+                break;
             }else {
-                if(aux->id > auxFor->id) {
-                    if(strcmp(auxFor->id, produtos->ultimo) == 0) {
-                        // Encadear na ultimo posição
+                if(auxFor->id > aux->id){ // 1 2 3 4 5 
+                    inseriu = 1;
+                    if(produtos->primeiro == auxFor){
+                        auxFor->anterior = aux;
+                        aux->proximo = auxFor;
+                        produtos->primeiro = aux;
+                        break;
+                    }else {
+                        auxFor->anterior->proximo = aux;
+                        aux->proximo = auxFor;
+                        aux->anterior = auxFor->anterior;
+                        auxFor->anterior = aux;
+                        break;
                     }
                 }
-
-
-
             }
-            
+        }
+        if(!inseriu){
+            produtos->ultimo->proximo = aux;
+            aux->anterior = produtos->ultimo;
+            produtos->ultimo = aux;
         }
     }
-
 }
 
-void listarProdutos(ElementProduto *produtos) {
+void listarProdutos(ListProduto *produtos) {
     int opt = 9;
 
     while(opt != 0) {
@@ -209,7 +220,7 @@ void listarProdutos(ElementProduto *produtos) {
 
 int main() {
     int opt = 9;
-    ElementProduto *produtos = malloc(sizeof(ElementProduto));
+    ListProduto *produtos = malloc(sizeof(ListProduto));
     
     produtos->ultimo = NULL;
     produtos->primeiro = NULL;
@@ -273,3 +284,4 @@ int main() {
     return 0;
 }
 // teste de acesso 
+// gcc AmazonCC.c -o prog
