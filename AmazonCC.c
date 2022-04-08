@@ -79,6 +79,28 @@ void menuListar() {
 }
 
 
+void menuBuscar() {
+    printf("-------------------------------------\n");
+    printf("\t      Amazon CC\n");
+    printf("-------------------------------------\n");
+
+    printf("\t0 - Voltar ao Menu Principal\n");
+    printf("-------------------------------------\n");
+
+    printf("\t1 - Buscar por Id\n");
+    printf("-------------------------------------\n");
+
+    printf("\t2 - Buscar por Nome\n");
+    printf("-------------------------------------\n");
+
+    printf("\t3 - Buscar Buscar por Preço\n");
+    printf("-------------------------------------\n");
+
+    printf("\t4 - Buscar Buscar por Quantidade\n");
+    printf("-------------------------------------\n");
+}
+
+
 int produtosNulo(ListProduto *produtos) {
     if(produtos->primeiro == NULL) {
         return TRUE;
@@ -255,12 +277,12 @@ void listarProdutos(ListProduto *produtos) {
 
 void buscarProdutos(ListProduto *produtos) {
     int opt = 9;
-    int pk;
-    double price;
-    int qnt;
-    Produto *auxBusca = produtos->primeiro;
+    int achou;
+    char nome[255];
+    Produto *auxBusca;
 
     while(opt!=0) {
+        menuBuscar();
         scanf("%d", &opt);
         switch(opt) {
             case 0:
@@ -269,71 +291,88 @@ void buscarProdutos(ListProduto *produtos) {
             
             case 1:
                 printf("Buscar por Id\n");
+                printf("Digite o Id: ");
+                int pk;
+                achou = 1;
                 scanf("%d", &pk);
                 if(produtosNulo(produtos)) {
                     printf("-------------------------------------\n");
                     printf("Lista Vazia! \n");
                 }else {
-                    for(auxBusca; auxBusca!=NULL; auxBusca=auxBusca->proximo) {
+                    for(auxBusca = produtos->primeiro; auxBusca!=NULL; auxBusca = auxBusca->proximo) {
                         if(auxBusca->id == pk) {
+                            achou = 0;
                             printf("%d %s %.2lf %d\n", auxBusca->id, auxBusca->nome, auxBusca->preco, auxBusca->quantidade);
-                        }else {
-                            printf("Produto não encontrado!\n");
                         }
+                    }
+                    if(achou){
+                        printf("Produto não encontrado!\n");
                     }
                 }
                 break;
 
             case 2:
-                // char name[255];
                 printf("Buscar por Nome\n");
-                // scanf("%s", &name);
-                // Produto *aux1 = produtos->primeiro;
-                // if(produtosNulo(produtos)) {
-                //     printf("-------------------------------------\n");
-                //     printf("Lista Vazia! \n");
-                // }else {
-                //     for(aux1; aux1!=NULL; aux1=aux1->proximo) {
-
-                //         if(aux1->nome == name) {
-                //             printf("%d %s %.2lf %d\n", aux1->id, aux1->nome, aux1->preco, aux1->quantidade);
-                //         }else {
-                //             printf("Produto não encontrado!\n");
-                //         }
-                //     }
-                // }
-                break; 
-
-            case 3:
-                printf("Buscar Buscar por preço\n");
-                /* scanf("%lf", &price);
+                printf("Digite o nome: ");
+                scanf("%s", nome);
+                achou = 1;
                 if(produtosNulo(produtos)) {
                     printf("-------------------------------------\n");
                     printf("Lista Vazia! \n");
                 }else {
-                    for(auxBusca; auxBusca!=NULL; auxBusca=auxBusca->proximo) {
-                        if(auxBusca->preco == price) {
+                    for(auxBusca = produtos->primeiro; auxBusca!=NULL; auxBusca = auxBusca->proximo) {
+                        if(strcmp(auxBusca->nome, nome) == 0) {
+                            achou = 0;
                             printf("%d %s %.2lf %d\n", auxBusca->id, auxBusca->nome, auxBusca->preco, auxBusca->quantidade);
-                        }else {
-                            printf("Produto não encontrado!\n");
                         }
                     }
-                } */
+                    if(achou){
+                        printf("Produto não encontrado!\n");
+                    }
+                }
+                break; 
+
+            case 3:
+                printf("Buscar Buscar por Preço\n");
+                printf("Digite o preço: ");
+                double preco;
+                achou = 1;
+                scanf("%lf", &preco);
+                if(produtosNulo(produtos)) {
+                    printf("-------------------------------------\n");
+                    printf("Lista Vazia! \n");
+                }else {
+                    for(auxBusca = produtos->primeiro; auxBusca!=NULL; auxBusca = auxBusca->proximo) {
+                        if(auxBusca->preco == preco) {
+                            achou = 0;
+                            printf("%d %s %.2lf %d\n", auxBusca->id, auxBusca->nome, auxBusca->preco, auxBusca->quantidade);
+                            return;
+                        }
+                    }
+                    if(achou){
+                        printf("Produto não encontrado!\n");
+                    }
+                } 
                 break;
 
             case 4:
-                printf("Buscar por quantidade\n");
+                printf("Buscar por Quantidade\n");
+                printf("Digite a quantidade: ");
+                int qnt;
+                achou = 1;
                 scanf("%d", &qnt);
                 if(produtosNulo(produtos)) {
                     printf("-------------------------------------\n");
                     printf("Lista Vazia! \n");
                 }else {
-                    for(auxBusca; auxBusca!=NULL; auxBusca=auxBusca->proximo) {
+                    for(auxBusca = produtos->primeiro; auxBusca!=NULL; auxBusca = auxBusca->proximo) {
                         if(auxBusca->quantidade == qnt) {
+                            achou = 0;
                             printf("%d %s %.2lf %d\n", auxBusca->id, auxBusca->nome, auxBusca->preco, auxBusca->quantidade);
-                        }else {
-                            printf("Produto não encontrado!\n");
                         }
+                    }
+                    if(achou){
+                        printf("Produto não encontrado!\n");
                     }
                 }
                 break;
