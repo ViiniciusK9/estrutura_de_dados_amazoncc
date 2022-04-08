@@ -167,6 +167,41 @@ void cadastroProdutos(ListProduto *produtos) {
     }
 }
 
+
+void excluirProdutos(ListProduto * produtos){
+    int id;
+    printf("Digite o ID a ser excluido: ");
+    scanf("%d", &id);
+    Produto *auxFor;
+    for(auxFor = produtos->primeiro; auxFor != NULL; auxFor = auxFor->proximo){
+        if(auxFor->id == id){
+            if(auxFor == produtos->primeiro && auxFor == produtos->ultimo){
+                produtos->primeiro = NULL;
+                produtos->ultimo = NULL;
+                free(auxFor);
+                return;
+            }else if(auxFor == produtos->primeiro){
+                auxFor->proximo->anterior = NULL;
+                produtos->primeiro = auxFor->proximo;
+                free(auxFor);
+                return;
+            }else if(auxFor == produtos->ultimo){
+                auxFor->anterior->proximo = NULL;
+                produtos->ultimo = auxFor->anterior;
+                free(auxFor);
+                return;
+            }else{
+                auxFor->anterior->proximo = auxFor->proximo;
+                auxFor->proximo->anterior = auxFor->anterior;
+                free(auxFor);
+                return;
+            }
+        }
+    }
+    printf("Produto não cadastrado!\n");
+}
+
+
 void listarProdutos(ListProduto *produtos) {
     int opt = 9;
 
@@ -265,6 +300,7 @@ int main() {
             printf("\n\n\n");
             printf("-------------------------------------\n");
             printf("\t   Deletar Produtos\n");
+            excluirProdutos(produtos);
             break;
 
         case 5:
