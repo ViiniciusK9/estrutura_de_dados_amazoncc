@@ -97,37 +97,37 @@ int carrinhoNulo(ListCarrinho *carrinho) {
 }
 
 
-Produto *alocar_dados(){
-    Produto *novo_produto = (Produto*)malloc(sizeof(Produto));
+Produto *infoProdutos(){
+    Produto *novoProduto = (Produto*)malloc(sizeof(Produto));
 
     printf("-------------------------------------\n");
     printf("Digite o ID: ");
-    scanf("%d", &novo_produto->id);
+    scanf("%d", &novoProduto->id);
     printf("\n");
 
     printf("-------------------------------------\n");
     printf("Digite a Descrição do Produto: ");
-    scanf("%s", novo_produto->nome);   
+    scanf("%s", novoProduto->nome);   
     printf("\n");
     
     printf("-------------------------------------\n");
     printf("Digite o Preço do Produto: ");
-    scanf("%lf", &novo_produto->preco);
+    scanf("%lf", &novoProduto->preco);
     printf("\n");
  
     printf("-------------------------------------\n");
     printf("Digite a Quantidade do Produto: ");
-    scanf("%d", &novo_produto->quantidade);
+    scanf("%d", &novoProduto->quantidade);
     printf("\n");
 
-    novo_produto->proximo = NULL;
-    novo_produto->anterior = NULL;
-    return novo_produto;
+    novoProduto->proximo = NULL;
+    novoProduto->anterior = NULL;
+    return novoProduto;
 }
 
 
-void cadastroProdutos(ListProduto *produtos) {
-    Produto *aux = alocar_dados();
+void cadastroProdutos(ListProduto *produtos) {  
+    Produto *aux = infoProdutos();
     Produto *auxFor;
     int inseriu = 0;
 
@@ -137,14 +137,14 @@ void cadastroProdutos(ListProduto *produtos) {
     
     }else {
         
-        for(auxFor = produtos->primeiro; auxFor != NULL; auxFor = auxFor->proximo){
-            if(auxFor->id == aux->id){
+        for(auxFor = produtos->primeiro; auxFor != NULL; auxFor = auxFor->proximo) {
+            if(auxFor->id == aux->id) {
                 printf("ID invalido\n");
                 break;
             }else {
                 if(auxFor->id > aux->id){ // 1 2 3 4 5 
                     inseriu = 1;
-                    if(produtos->primeiro == auxFor){
+                    if(produtos->primeiro == auxFor) {
                         auxFor->anterior = aux;
                         aux->proximo = auxFor;
                         produtos->primeiro = aux;
@@ -159,7 +159,7 @@ void cadastroProdutos(ListProduto *produtos) {
                 }
             }
         }
-        if(!inseriu){
+        if(!inseriu) {
             produtos->ultimo->proximo = aux;
             aux->anterior = produtos->ultimo;
             produtos->ultimo = aux;
@@ -218,6 +218,99 @@ void listarProdutos(ListProduto *produtos) {
 }
 
 
+void buscarProdutos(ListProduto *produtos) {
+    int opt = 9;
+    int pk;
+    double price;
+    int qnt;
+    Produto *auxBusca = produtos->primeiro;
+
+    while(opt!=0) {
+        scanf("%d", &opt);
+        switch(opt) {
+            case 0:
+                printf("Voltar ao menu Principal\n");            
+                break;
+            
+            case 1:
+                printf("Buscar por Id\n");
+                scanf("%d", &pk);
+                if(produtosNulo(produtos)) {
+                    printf("-------------------------------------\n");
+                    printf("Lista Vazia! \n");
+                }else {
+                    for(auxBusca; auxBusca!=NULL; auxBusca=auxBusca->proximo) {
+                        if(auxBusca->id == pk) {
+                            printf("%d %s %.2lf %d\n", auxBusca->id, auxBusca->nome, auxBusca->preco, auxBusca->quantidade);
+                        }else {
+                            printf("Produto não encontrado!\n");
+                        }
+                    }
+                }
+                break;
+
+            case 2:
+                // char name[255];
+                printf("Buscar por Nome\n");
+                // scanf("%s", &name);
+                // Produto *aux1 = produtos->primeiro;
+                // if(produtosNulo(produtos)) {
+                //     printf("-------------------------------------\n");
+                //     printf("Lista Vazia! \n");
+                // }else {
+                //     for(aux1; aux1!=NULL; aux1=aux1->proximo) {
+
+                //         if(aux1->nome == name) {
+                //             printf("%d %s %.2lf %d\n", aux1->id, aux1->nome, aux1->preco, aux1->quantidade);
+                //         }else {
+                //             printf("Produto não encontrado!\n");
+                //         }
+                //     }
+                // }
+                break; 
+
+            case 3:
+                printf("Buscar Buscar por preço\n");
+                /* scanf("%lf", &price);
+                if(produtosNulo(produtos)) {
+                    printf("-------------------------------------\n");
+                    printf("Lista Vazia! \n");
+                }else {
+                    for(auxBusca; auxBusca!=NULL; auxBusca=auxBusca->proximo) {
+                        if(auxBusca->preco == price) {
+                            printf("%d %s %.2lf %d\n", auxBusca->id, auxBusca->nome, auxBusca->preco, auxBusca->quantidade);
+                        }else {
+                            printf("Produto não encontrado!\n");
+                        }
+                    }
+                } */
+                break;
+
+            case 4:
+                printf("Buscar por quantidade\n");
+                scanf("%d", &qnt);
+                if(produtosNulo(produtos)) {
+                    printf("-------------------------------------\n");
+                    printf("Lista Vazia! \n");
+                }else {
+                    for(auxBusca; auxBusca!=NULL; auxBusca=auxBusca->proximo) {
+                        if(auxBusca->quantidade == qnt) {
+                            printf("%d %s %.2lf %d\n", auxBusca->id, auxBusca->nome, auxBusca->preco, auxBusca->quantidade);
+                        }else {
+                            printf("Produto não encontrado!\n");
+                        }
+                    }
+                }
+                break;
+
+            default:
+                printf("Opção invalida!\n");
+                break;
+        }
+    }
+}
+
+
 int main() {
     int opt = 9;
     ListProduto *produtos = malloc(sizeof(ListProduto));
@@ -259,6 +352,7 @@ int main() {
             printf("\n\n\n");
             printf("-------------------------------------\n");
             printf("\t   Buscar Produtos\n");
+            buscarProdutos(produtos);
             break;
 
         case 4:        
