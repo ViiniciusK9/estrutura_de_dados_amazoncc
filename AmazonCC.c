@@ -101,6 +101,31 @@ void menuBuscar() {
 }
 
 
+void menuCarrinho() {
+    printf("-------------------------------------\n");
+    printf("\t      Amazon CC\n");
+    printf("-------------------------------------\n");
+
+    printf("\t0 - Voltar ao Menu Principal\n");
+    printf("-------------------------------------\n");
+
+    printf("\t1 - Colocar Produto no Carrinho\n");
+    printf("-------------------------------------\n");
+
+    printf("\t2 - Remover Produto do Carrinho\n");
+    printf("-------------------------------------\n");
+
+    printf("\t3 - Valor Total do Carrinho\n");
+    printf("-------------------------------------\n");
+
+    printf("\t4 - Consultar Carrinho\n");
+    printf("-------------------------------------\n");
+
+    printf("\t5 - Finalizar Compra\n");
+    printf("-------------------------------------\n");
+}
+
+
 int produtosNulo(ListProduto *produtos) {
     if(produtos->primeiro == NULL) {
         return TRUE;
@@ -385,10 +410,78 @@ void buscarProdutos(ListProduto *produtos) {
 }
 
 
+void mainCarrinho(ListProduto *produtos, ListCarrinho *carrinho){
+    int opt = 9;
+
+    while(opt != 0) {
+        menuCarrinho();
+        scanf("%d", &opt);
+        printf("-------------------------------------\n");
+
+        
+        switch(opt) {
+        
+        case 0:
+            printf("\n\n\n");
+            printf("-------------------------------------\n");
+            printf("\t  Voltar ao Menu Principal\n");
+            printf("-------------------------------------\n");
+            break;
+
+        case 1:
+            printf("\n\n\n");
+            printf("-------------------------------------\n");
+            printf("\t  Colocar Produto no Carrinho\n");
+            cadastroProdutos(produtos);
+            break;
+        
+        case 2:
+            printf("\n\n\n");
+            printf("-------------------------------------\n");
+            printf("\t   Remover Produto do Carrinho\n");
+            listarProdutos(produtos);
+            break;
+        
+        case 3:
+            printf("\n\n\n");
+            printf("-------------------------------------\n");
+            printf("\t   Valor Total do Carrinho\n");
+            buscarProdutos(produtos);
+            break;
+
+        case 4:        
+            printf("\n\n\n");
+            printf("-------------------------------------\n");
+            printf("\t   Consultar Carrinho\n");
+            excluirProdutos(produtos);
+            break;
+
+        case 5:
+            printf("\n\n\n");
+            printf("-------------------------------------\n");
+            printf("\t   Finalizar Compra\n");
+            menuCarrinho();
+            break;
+
+        default:
+            printf("\n\n\n");
+            printf("-------------------------------------\n");
+            printf("\t  Opção Invalida!!!\n");
+            break;
+        }
+    }
+
+}
+
+
 int main() {
     int opt = 9;
+    ListCarrinho *carrinho = malloc(sizeof(ListCarrinho));
     ListProduto *produtos = malloc(sizeof(ListProduto));
     
+    carrinho->ultimo = NULL;
+    carrinho->primeiro = NULL;
+
     produtos->ultimo = NULL;
     produtos->primeiro = NULL;
 
@@ -440,6 +533,7 @@ int main() {
             printf("\n\n\n");
             printf("-------------------------------------\n");
             printf("\t   Comprar Produtos\n");
+            mainCarrinho(produtos, carrinho);
             break;
 
         default:
