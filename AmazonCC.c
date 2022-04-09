@@ -115,13 +115,10 @@ void menuCarrinho() {
     printf("\t2 - Remover Produto do Carrinho\n");
     printf("-------------------------------------\n");
 
-    printf("\t3 - Valor Total do Carrinho\n");
+    printf("\t3 - Consultar Carrinho\n");
     printf("-------------------------------------\n");
 
-    printf("\t4 - Consultar Carrinho\n");
-    printf("-------------------------------------\n");
-
-    printf("\t5 - Finalizar Compra\n");
+    printf("\t4 - Finalizar Compra\n");
     printf("-------------------------------------\n");
 }
 
@@ -410,6 +407,78 @@ void buscarProdutos(ListProduto *produtos) {
 }
 
 
+void listarCarrinho(ListCarrinho *carrinho){
+    Carrinho *aux; 
+    for (aux = carrinho->primeiro; aux != NULL; aux = aux->proximo){
+        printf("%d %d\n", aux->idCarrinho, aux->quantidadeCarrinho);
+    }
+}
+
+
+
+int verificarEstoque(ListProduto *produtos, int id, int qnt){
+    Produto *auxFor;
+    for (auxFor = produtos->primeiro; auxFor != NULL; auxFor = auxFor->proximo){
+        if(id == auxFor->id && qnt < auxFor->quantidade && (auxFor->quantidade - qnt) >= 0){
+            auxFor->quantidade -= qnt;
+            return 1;
+        }
+    }
+    return 0;
+}
+
+
+int verificarCarrinho(ListCarrinho *carrinho, int id, int qnt){
+    Carrinho *auxFor;
+    for (auxFor = carrinho->primeiro; auxFor != NULL; auxFor = auxFor->proximo){
+        if(id == auxFor->idCarrinho && (auxFor->quantidadeCarrinho + qnt) > 0){
+            auxFor->quantidadeCarrinho += qnt;
+            return 1;
+        }
+    }
+    return 0;
+}
+
+
+Carrinho *infoCarrinho(int id, int qnt){
+    Carrinho *novoElemento = (Carrinho*)malloc(sizeof(Carrinho));
+    novoElemento->idCarrinho = id;
+    novoElemento->quantidadeCarrinho = qnt;
+    novoElemento->proximo = NULL;
+    novoElemento->anterior = NULL;
+    return novoElemento;
+}
+
+
+void inserirProdutoCarrinho(ListProduto *produtos, ListCarrinho *carrinho){
+    int id, qnt;
+    printf("-------------------------------------\n");
+    printf("Digite o ID: ");
+    scanf("%d", &id);
+    printf("\n");
+ 
+    printf("-------------------------------------\n");
+    printf("Digite a Quantidade do Produto: ");
+    scanf("%d", &qnt);
+    printf("\n");
+    if(verificarEstoque(produtos, id, qnt)) {
+        if(verificarCarrinho(carrinho, id, qnt)){
+            return;
+        }else {
+            Carrinho *aux = infoCarrinho(id, qnt);
+            if(carrinho->primeiro == NULL && carrinho->ultimo == NULL) {
+                carrinho->primeiro = aux;
+                carrinho->ultimo = aux;
+            }else {
+                carrinho->ultimo->proximo = aux;
+                aux->anterior = carrinho->ultimo;
+                carrinho->ultimo = aux;
+            }
+        }
+    }
+}
+
+
 void mainCarrinho(ListProduto *produtos, ListCarrinho *carrinho){
     int opt = 9;
 
@@ -431,36 +500,28 @@ void mainCarrinho(ListProduto *produtos, ListCarrinho *carrinho){
         case 1:
             printf("\n\n\n");
             printf("-------------------------------------\n");
-            printf("\t  Colocar Produto no Carrinho\n");
-            cadastroProdutos(produtos);
+            printf("\t  Inserir Produto no Carrinho\n");
+            inserirProdutoCarrinho(produtos, carrinho);
             break;
         
         case 2:
             printf("\n\n\n");
             printf("-------------------------------------\n");
             printf("\t   Remover Produto do Carrinho\n");
-            listarProdutos(produtos);
+            
             break;
         
         case 3:
             printf("\n\n\n");
             printf("-------------------------------------\n");
-            printf("\t   Valor Total do Carrinho\n");
-            buscarProdutos(produtos);
+            printf("\t   Consultar Carrinho\n");
+            listarCarrinho(carrinho);
             break;
 
         case 4:        
             printf("\n\n\n");
             printf("-------------------------------------\n");
-            printf("\t   Consultar Carrinho\n");
-            excluirProdutos(produtos);
-            break;
-
-        case 5:
-            printf("\n\n\n");
-            printf("-------------------------------------\n");
             printf("\t   Finalizar Compra\n");
-            menuCarrinho();
             break;
 
         default:
