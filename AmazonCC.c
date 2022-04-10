@@ -415,7 +415,6 @@ void listarCarrinho(ListCarrinho *carrinho){
 }
 
 
-
 int verificarEstoque(ListProduto *produtos, int id, int qnt){
     Produto *auxFor;
     for (auxFor = produtos->primeiro; auxFor != NULL; auxFor = auxFor->proximo){
@@ -431,9 +430,24 @@ int verificarEstoque(ListProduto *produtos, int id, int qnt){
 int verificarCarrinho(ListCarrinho *carrinho, int id, int qnt){
     Carrinho *auxFor;
     for (auxFor = carrinho->primeiro; auxFor != NULL; auxFor = auxFor->proximo){
-        if(id == auxFor->idCarrinho && (auxFor->quantidadeCarrinho + qnt) > 0){
+        if(id == auxFor->idCarrinho && (auxFor->quantidadeCarrinho + qnt) >= 0){
             auxFor->quantidadeCarrinho += qnt;
             return 1;
+        }
+    }
+    return 0;
+}
+
+
+int verificarCarrinhoRemover(ListCarrinho *carrinho, int id, int qnt){
+    Carrinho *auxFor;
+    for (auxFor = carrinho->primeiro; auxFor != NULL; auxFor = auxFor->proximo){
+        if(id == auxFor->idCarrinho && (auxFor->quantidadeCarrinho - qnt) > 0){
+            auxFor->quantidadeCarrinho -= qnt;
+            return 1;
+        }else if (id == auxFor->idCarrinho && (auxFor->quantidadeCarrinho - qnt) == 0){
+            auxFor->quantidadeCarrinho -= qnt;
+            return 2;
         }
     }
     return 0;
@@ -479,6 +493,58 @@ void inserirProdutoCarrinho(ListProduto *produtos, ListCarrinho *carrinho){
 }
 
 
+void removerCarrinho(ListCarrinho *carrinho, int id){
+    Carrinho *auxFor;
+    for(auxFor = carrinho->primeiro; auxFor != NULL; auxFor = auxFor->proximo){
+        if(auxFor->idCarrinho == id){
+            if(auxFor == carrinho->primeiro && auxFor == carrinho->ultimo){
+                carrinho->primeiro = NULL;
+                carrinho->ultimo = NULL;
+                free(auxFor);
+                return;
+            }else if(auxFor == carrinho->primeiro){
+                auxFor->proximo->anterior = NULL;
+                carrinho->primeiro = auxFor->proximo;
+                free(auxFor);
+                return;
+            }else if(auxFor == carrinho->ultimo){
+                auxFor->anterior->proximo = NULL;
+                carrinho->ultimo = auxFor->anterior;
+                free(auxFor);
+                return;
+            }else{
+                auxFor->anterior->proximo = auxFor->proximo;
+                auxFor->proximo->anterior = auxFor->anterior;
+                free(auxFor);
+                return;
+            }
+        }
+    }
+}
+
+
+void removerProdutoCarrinho(ListProduto *produtos, ListCarrinho *carrinho){
+    int id, qnt;
+    printf("-------------------------------------\n");
+    printf("Digite o ID: ");
+    scanf("%d", &id);
+    printf("\n");
+ 
+    printf("-------------------------------------\n");
+    printf("Digite a Quantidade do Produto: ");
+    scanf("%d", &qnt);
+    printf("\n");
+    int flag = verificarCarrinhoRemover(carrinho, id, qnt);
+    if(flag == 1){
+        verificarEstoque(produtos, id, (-qnt));
+        return;
+    }else if (flag == 2){
+        verificarEstoque(produtos, id, (-qnt));
+        removerCarrinho(carrinho, id);
+    }
+}
+
+
 void mainCarrinho(ListProduto *produtos, ListCarrinho *carrinho){
     int opt = 9;
 
@@ -508,7 +574,7 @@ void mainCarrinho(ListProduto *produtos, ListCarrinho *carrinho){
             printf("\n\n\n");
             printf("-------------------------------------\n");
             printf("\t   Remover Produto do Carrinho\n");
-            
+            removerProdutoCarrinho(produtos, carrinho);
             break;
         
         case 3:
