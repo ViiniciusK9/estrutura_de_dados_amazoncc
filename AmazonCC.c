@@ -135,9 +135,9 @@ int produtosNulo(ListProduto *produtos) {
 
 int carrinhoNulo(ListCarrinho *carrinho) {
     if(carrinho->primeiro == NULL) {
-        return TRUE;
+        return 1;
     } else {
-        return FALSE;
+        return 0;
     }
 }
 
@@ -409,9 +409,16 @@ void buscarProdutos(ListProduto *produtos) {
 
 
 void listarCarrinho(ListCarrinho *carrinho){
-    Carrinho *aux; 
-    for (aux = carrinho->primeiro; aux != NULL; aux = aux->proximo){
-        printf("%d %d %.2lf\n", aux->idCarrinho, aux->quantidadeCarrinho, aux->preco);
+    Carrinho *aux;
+    double total = 0;
+    if(carrinhoNulo(carrinho)){
+
+    }else {
+        for (aux = carrinho->primeiro; aux != NULL; aux = aux->proximo){
+            total += (aux->preco * aux->quantidadeCarrinho);
+            printf("%d %d %.2lf\n", aux->idCarrinho, aux->quantidadeCarrinho, aux->preco);
+        }
+        printf("Total a pagar: R$ %.2lf\n", total);
     }
 }
 
@@ -504,7 +511,7 @@ void inserirProdutoCarrinho(ListProduto *produtos, ListCarrinho *carrinho){
             }
         }
     }else {
-        printf("Id não encontrado\n");
+        printf("Produto não cadastrado\n");
     }
 }
 
@@ -617,6 +624,25 @@ void mainCarrinho(ListProduto *produtos, ListCarrinho *carrinho){
 }
 
 
+void limparMemoria(ListProduto *produtos, ListCarrinho *carrinho){
+    Carrinho *auxForc = carrinho->primeiro;
+    Carrinho *anteriorc;
+    while(auxForc != NULL){
+        anteriorc = auxForc;
+        auxForc = auxForc->proximo;
+        free(anteriorc);
+    }
+
+    Produto *auxFor = produtos->primeiro;
+    Produto *anterior;
+    while(auxFor != NULL){
+        anterior = auxFor;
+        auxFor = auxFor->proximo;
+        free(anterior);
+    }
+}
+
+
 int main() {
     int opt = 9;
     ListCarrinho *carrinho = malloc(sizeof(ListCarrinho));
@@ -642,6 +668,7 @@ int main() {
             printf("-------------------------------------\n");
             printf("\t  Sair do Sistema!\n");
             printf("-------------------------------------\n");
+            limparMemoria(produtos, carrinho);
             break;
 
         case 1:
