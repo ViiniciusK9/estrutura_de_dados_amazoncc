@@ -25,6 +25,7 @@ typedef struct {
 struct _Carrinho {
     int idCarrinho;
     int quantidadeCarrinho;
+    double preco;
     struct _Carrinho *proximo;
     struct _Carrinho *anterior;
 
@@ -410,7 +411,7 @@ void buscarProdutos(ListProduto *produtos) {
 void listarCarrinho(ListCarrinho *carrinho){
     Carrinho *aux; 
     for (aux = carrinho->primeiro; aux != NULL; aux = aux->proximo){
-        printf("%d %d\n", aux->idCarrinho, aux->quantidadeCarrinho);
+        printf("%d %d %.2lf\n", aux->idCarrinho, aux->quantidadeCarrinho, aux->preco);
     }
 }
 
@@ -418,7 +419,7 @@ void listarCarrinho(ListCarrinho *carrinho){
 int verificarEstoque(ListProduto *produtos, int id, int qnt){
     Produto *auxFor;
     for (auxFor = produtos->primeiro; auxFor != NULL; auxFor = auxFor->proximo){
-        if(id == auxFor->id && qnt < auxFor->quantidade && (auxFor->quantidade - qnt) >= 0){
+        if(id == auxFor->id && qnt <= auxFor->quantidade && (auxFor->quantidade - qnt) >= 0){
             auxFor->quantidade -= qnt;
             return 1;
         }
@@ -454,10 +455,22 @@ int verificarCarrinhoRemover(ListCarrinho *carrinho, int id, int qnt){
 }
 
 
-Carrinho *infoCarrinho(int id, int qnt){
+double verificarPrecoProduto(ListProduto *produtos, int id){
+    Produto *auxFor;
+    for (auxFor = produtos->primeiro; auxFor != NULL; auxFor = auxFor->proximo){
+        if(id == auxFor->id){
+            return auxFor->preco;
+        }
+    }
+    return 0;
+}
+
+
+Carrinho *infoCarrinho(int id, int qnt, double preco){
     Carrinho *novoElemento = (Carrinho*)malloc(sizeof(Carrinho));
     novoElemento->idCarrinho = id;
     novoElemento->quantidadeCarrinho = qnt;
+    novoElemento->preco = preco;
     novoElemento->proximo = NULL;
     novoElemento->anterior = NULL;
     return novoElemento;
@@ -479,7 +492,8 @@ void inserirProdutoCarrinho(ListProduto *produtos, ListCarrinho *carrinho){
         if(verificarCarrinho(carrinho, id, qnt)){
             return;
         }else {
-            Carrinho *aux = infoCarrinho(id, qnt);
+            double preco = verificarPrecoProduto(produtos, id);
+            Carrinho *aux = infoCarrinho(id, qnt, preco);
             if(carrinho->primeiro == NULL && carrinho->ultimo == NULL) {
                 carrinho->primeiro = aux;
                 carrinho->ultimo = aux;
@@ -489,6 +503,8 @@ void inserirProdutoCarrinho(ListProduto *produtos, ListCarrinho *carrinho){
                 carrinho->ultimo = aux;
             }
         }
+    }else {
+        printf("Id não encontrado\n");
     }
 }
 
@@ -541,6 +557,8 @@ void removerProdutoCarrinho(ListProduto *produtos, ListCarrinho *carrinho){
     }else if (flag == 2){
         verificarEstoque(produtos, id, (-qnt));
         removerCarrinho(carrinho, id);
+    }else{
+        printf("Id não encontrado\n");
     }
 }
 
@@ -552,8 +570,6 @@ void mainCarrinho(ListProduto *produtos, ListCarrinho *carrinho){
         menuCarrinho();
         scanf("%d", &opt);
         printf("-------------------------------------\n");
-
-        
         switch(opt) {
         
         case 0:
