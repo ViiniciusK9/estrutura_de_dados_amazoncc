@@ -412,13 +412,13 @@ void listarCarrinho(ListCarrinho *carrinho){
     Carrinho *aux;
     double total = 0;
     if(carrinhoNulo(carrinho)){
-
+        printf("\tCarrinho está vaziu!\n");
     }else {
         for (aux = carrinho->primeiro; aux != NULL; aux = aux->proximo){
             total += (aux->preco * aux->quantidadeCarrinho);
             printf("%d %d %.2lf\n", aux->idCarrinho, aux->quantidadeCarrinho, aux->preco);
         }
-        printf("Total a pagar: R$ %.2lf\n", total);
+        printf("\tTotal a pagar: R$ %.2lf\n", total);
     }
 }
 
@@ -546,6 +546,34 @@ void removerCarrinho(ListCarrinho *carrinho, int id){
 }
 
 
+void finalizarCompra(ListProduto *produtos, ListCarrinho *carrinho){
+    limparCarrinho(carrinho);
+    Produto *auxFor;
+    for(auxFor = produtos->primeiro; auxFor != NULL; auxFor = auxFor->proximo){
+        if(auxFor->quantidade == 0){
+            if(auxFor == produtos->primeiro && auxFor == produtos->ultimo){
+                produtos->primeiro = NULL;
+                produtos->ultimo = NULL;
+                free(auxFor);
+            }else if(auxFor == produtos->primeiro){
+                auxFor->proximo->anterior = NULL;
+                produtos->primeiro = auxFor->proximo;
+                free(auxFor);
+            }else if(auxFor == produtos->ultimo){
+                auxFor->anterior->proximo = NULL;
+                produtos->ultimo = auxFor->anterior;
+                free(auxFor);
+            }else{
+                auxFor->anterior->proximo = auxFor->proximo;
+                auxFor->proximo->anterior = auxFor->anterior;
+                free(auxFor);
+            }
+        }
+    }
+    printf("Compra finalizada com sucesso!\n");
+}
+
+
 void removerProdutoCarrinho(ListProduto *produtos, ListCarrinho *carrinho){
     int id, qnt;
     printf("-------------------------------------\n");
@@ -611,6 +639,7 @@ void mainCarrinho(ListProduto *produtos, ListCarrinho *carrinho){
             printf("\n\n\n");
             printf("-------------------------------------\n");
             printf("\t   Finalizar Compra\n");
+            finalizarCompra(produtos, carrinho);
             break;
 
         default:
@@ -624,7 +653,7 @@ void mainCarrinho(ListProduto *produtos, ListCarrinho *carrinho){
 }
 
 
-void limparMemoria(ListProduto *produtos, ListCarrinho *carrinho){
+void limparCarrinho(ListCarrinho *carrinho){
     Carrinho *auxForc = carrinho->primeiro;
     Carrinho *anteriorc;
     while(auxForc != NULL){
@@ -632,6 +661,13 @@ void limparMemoria(ListProduto *produtos, ListCarrinho *carrinho){
         auxForc = auxForc->proximo;
         free(anteriorc);
     }
+    carrinho->primeiro = NULL;
+    carrinho->ultimo = NULL;
+}
+
+
+void limparMemoria(ListProduto *produtos, ListCarrinho *carrinho){
+    limparCarrinho(carrinho);
 
     Produto *auxFor = produtos->primeiro;
     Produto *anterior;
