@@ -39,88 +39,108 @@ typedef struct {
 } ListCarrinho;
 
 
+void center_print(const char *s, int width){
+    int length = strlen(s);
+    int i;
+    for (i=0; i<=(width-length)/2; i++) {
+            fputs(" ", stdout);
+    }
+    fputs(s, stdout);
+    i += length;
+    for (; i<=width; i++) {
+            fputs(" ", stdout);
+    }
+    printf("\n");
+}
+
+
+void linha(){
+    printf("--------------------------------------------------\n");
+}
+
+
 void menu() {
-    printf("-------------------------------------\n");
-    printf("\t      Amazon CC\n");
-    printf("-------------------------------------\n");
+    linha();
+    center_print("Amazon CC",50);
+    linha();
 
     printf("\t0 - Sair do Sistema\n");
-    printf("-------------------------------------\n");
+    linha();
 
     printf("\t1 - Cadastrar Produtos \n");
-    printf("-------------------------------------\n");
+    linha();
 
     printf("\t2 - Listar Produtos\n");
-    printf("-------------------------------------\n");
+    linha();
 
     printf("\t3 - Buscar Produtos\n");
-    printf("-------------------------------------\n");
+    linha();
 
     printf("\t4 - Deletar Produtos\n");
-    printf("-------------------------------------\n");
+    linha();
 
     printf("\t5 - Comprar Produtos\n");
-    printf("-------------------------------------\n");
+    linha();
 }
 
 
 void menuListar() {
-    printf("-------------------------------------\n");
-    printf("\t      Amazon CC\n");
-    printf("-------------------------------------\n");
+    linha();
+    center_print("Amazon CC",50);
+    linha();
 
     printf("\t0 - Voltar ao Menu Principal\n");
-    printf("-------------------------------------\n");
+    linha();
 
     printf("\t1 - Listar Produtos em Ordem Crescente\n");
-    printf("-------------------------------------\n");
+    linha();
 
     printf("\t2 - Listar Produtos em Ordem Decrescente\n");
-    printf("-------------------------------------\n");
+    linha();
 }
 
 
 void menuBuscar() {
-    printf("-------------------------------------\n");
-    printf("\t      Amazon CC\n");
-    printf("-------------------------------------\n");
+    linha();
+    center_print("Amazon CC",50);
+    linha();
 
     printf("\t0 - Voltar ao Menu Principal\n");
-    printf("-------------------------------------\n");
+    linha();
 
     printf("\t1 - Buscar por Id\n");
-    printf("-------------------------------------\n");
+    linha();
 
     printf("\t2 - Buscar por Nome\n");
-    printf("-------------------------------------\n");
+    linha();
 
     printf("\t3 - Buscar Buscar por Preço\n");
-    printf("-------------------------------------\n");
+    linha();
 
     printf("\t4 - Buscar Buscar por Quantidade\n");
-    printf("-------------------------------------\n");
+    linha();
 }
 
 
 void menuCarrinho() {
-    printf("-------------------------------------\n");
-    printf("\t      Amazon CC\n");
-    printf("-------------------------------------\n");
+    linha();
+    center_print("Amazon CC",50);
+    linha();
 
     printf("\t0 - Voltar ao Menu Principal\n");
-    printf("-------------------------------------\n");
+    linha();
 
     printf("\t1 - Colocar Produto no Carrinho\n");
-    printf("-------------------------------------\n");
+    linha();
 
     printf("\t2 - Remover Produto do Carrinho\n");
-    printf("-------------------------------------\n");
+    linha();
 
     printf("\t3 - Consultar Carrinho\n");
-    printf("-------------------------------------\n");
+    linha();
 
     printf("\t4 - Finalizar Compra\n");
-    printf("-------------------------------------\n");
+    linha();
 }
 
 
@@ -145,22 +165,22 @@ int carrinhoNulo(ListCarrinho *carrinho) {
 Produto *infoProdutos(){
     Produto *novoProduto = (Produto*)malloc(sizeof(Produto));
 
-    printf("-------------------------------------\n");
+    linha();
     printf("Digite o ID: ");
     scanf("%d", &novoProduto->id);
     printf("\n");
 
-    printf("-------------------------------------\n");
+    linha();
     printf("Digite a Descrição do Produto: ");
     scanf("%s", novoProduto->nome);   
     printf("\n");
     
-    printf("-------------------------------------\n");
+    linha();
     printf("Digite o Preço do Produto: ");
     scanf("%lf", &novoProduto->preco);
     printf("\n");
  
-    printf("-------------------------------------\n");
+    linha();
     printf("Digite a Quantidade do Produto: ");
     scanf("%d", &novoProduto->quantidade);
     printf("\n");
@@ -179,13 +199,12 @@ void cadastroProdutos(ListProduto *produtos) {
     if(produtos->primeiro == NULL && produtos->ultimo == NULL) {
         produtos->primeiro = aux;
         produtos->ultimo = aux;
-    
     }else {
-        
         for(auxFor = produtos->primeiro; auxFor != NULL; auxFor = auxFor->proximo) {
             if(auxFor->id == aux->id) {
-                printf("ID invalido\n");
-                break;
+                linha();
+                center_print("ID invalido",50);
+                return;
             }else {
                 if(auxFor->id > aux->id){ // 1 2 3 4 5 
                     inseriu = 1;
@@ -210,6 +229,9 @@ void cadastroProdutos(ListProduto *produtos) {
             produtos->ultimo = aux;
         }
     }
+    linha();
+    center_print("Produto cadastrado com sucesso!",50);
+    linha();
 }
 
 
@@ -220,6 +242,9 @@ void excluirProdutos(ListProduto * produtos){
     Produto *auxFor;
     for(auxFor = produtos->primeiro; auxFor != NULL; auxFor = auxFor->proximo){
         if(auxFor->id == id){
+            linha();
+            center_print("Produto deletado com sucesso!",50);
+            linha();
             if(auxFor == produtos->primeiro && auxFor == produtos->ultimo){
                 produtos->primeiro = NULL;
                 produtos->ultimo = NULL;
@@ -243,7 +268,10 @@ void excluirProdutos(ListProduto * produtos){
             }
         }
     }
-    printf("Produto não cadastrado!\n");
+    linha();
+    center_print("Produto não cadastrado!",50);
+    linha();
+    
 }
 
 
@@ -256,17 +284,17 @@ void listarProdutos(ListProduto *produtos) {
 
         switch(opt) {
             case 0:
-                printf("-------------------------------------\n");
-                printf("Voltar ao Menu Principal\n");
+                linha();
+                center_print("Voltar ao Menu Principal",50);
                 break;
 
             case 1:
-                printf("-------------------------------------\n");
-                printf("Listar em Ordem Crescente\n");
+                linha();
+                center_print("Listar em Ordem Crescente",50);
                 Produto *aux1 = produtos->primeiro;
                 if(produtosNulo(produtos)) {
-                    printf("-------------------------------------\n");
-                    printf("Lista Vazia! \n");
+                    linha();
+                    center_print("Lista Vazia!",50);
                 }else {
                     for(aux1; aux1!=NULL; aux1=aux1->proximo) {
                         printf("%d %s %.2lf %d\n", aux1->id, aux1->nome, aux1->preco, aux1->quantidade);
@@ -275,12 +303,12 @@ void listarProdutos(ListProduto *produtos) {
                 break;
             
             case 2:
-                printf("-------------------------------------\n");
-                printf("Listar em Ordem Decrescente\n");
+                linha();
+                center_print("Listar em Ordem Decrescente",50);
                 Produto *aux2 = produtos->ultimo;
                 if(produtosNulo(produtos)) {
-                    printf("-------------------------------------\n");
-                    printf("Lista Vazia! \n");
+                    linha();
+                    center_print("Lista Vazia!",50);
                 }else {
                     for(aux2; aux2!=NULL; aux2=aux2->anterior) {
                         printf("%d %s %.2lf %d\n", aux2->id, aux2->nome, aux2->preco, aux2->quantidade);
@@ -290,8 +318,8 @@ void listarProdutos(ListProduto *produtos) {
 
 
             default:
-                printf("-------------------------------------\n");
-                printf("Opção Invalida !\n");
+                linha();
+                center_print("Opção Invalida !",50);
                 break;
         }
     }
@@ -306,10 +334,11 @@ void buscarProdutos(ListProduto *produtos) {
 
     while(opt!=0) {
         menuBuscar();
+        printf("Opção: ");
         scanf("%d", &opt);
         switch(opt) {
             case 0:
-                printf("Voltar ao menu Principal\n");            
+                center_print("Voltar ao menu Principal",50);           
                 break;
             
             case 1:
@@ -319,8 +348,8 @@ void buscarProdutos(ListProduto *produtos) {
                 achou = 1;
                 scanf("%d", &pk);
                 if(produtosNulo(produtos)) {
-                    printf("-------------------------------------\n");
-                    printf("Lista Vazia! \n");
+                    linha();
+                    center_print("Lista Vazia!",50);
                 }else {
                     for(auxBusca = produtos->primeiro; auxBusca!=NULL; auxBusca = auxBusca->proximo) {
                         if(auxBusca->id == pk) {
@@ -329,7 +358,8 @@ void buscarProdutos(ListProduto *produtos) {
                         }
                     }
                     if(achou){
-                        printf("Produto não encontrado!\n");
+                        linha();
+                        center_print("Produto não encontrado!",50);
                     }
                 }
                 break;
@@ -340,8 +370,8 @@ void buscarProdutos(ListProduto *produtos) {
                 scanf("%s", nome);
                 achou = 1;
                 if(produtosNulo(produtos)) {
-                    printf("-------------------------------------\n");
-                    printf("Lista Vazia! \n");
+                    linha();
+                    center_print("Lista Vazia!",50);
                 }else {
                     for(auxBusca = produtos->primeiro; auxBusca!=NULL; auxBusca = auxBusca->proximo) {
                         if(strcmp(auxBusca->nome, nome) == 0) {
@@ -350,7 +380,8 @@ void buscarProdutos(ListProduto *produtos) {
                         }
                     }
                     if(achou){
-                        printf("Produto não encontrado!\n");
+                        linha();
+                        center_print("Produto não encontrado!",50);
                     }
                 }
                 break; 
@@ -362,8 +393,8 @@ void buscarProdutos(ListProduto *produtos) {
                 achou = 1;
                 scanf("%lf", &preco);
                 if(produtosNulo(produtos)) {
-                    printf("-------------------------------------\n");
-                    printf("Lista Vazia! \n");
+                    linha();
+                    center_print("Lista Vazia!",50);
                 }else {
                     for(auxBusca = produtos->primeiro; auxBusca!=NULL; auxBusca = auxBusca->proximo) {
                         if(auxBusca->preco == preco) {
@@ -373,7 +404,8 @@ void buscarProdutos(ListProduto *produtos) {
                         }
                     }
                     if(achou){
-                        printf("Produto não encontrado!\n");
+                        linha();
+                        center_print("Produto não encontrado!",50);
                     }
                 } 
                 break;
@@ -385,8 +417,8 @@ void buscarProdutos(ListProduto *produtos) {
                 achou = 1;
                 scanf("%d", &qnt);
                 if(produtosNulo(produtos)) {
-                    printf("-------------------------------------\n");
-                    printf("Lista Vazia! \n");
+                    linha();
+                    center_print("Lista Vazia!",50);
                 }else {
                     for(auxBusca = produtos->primeiro; auxBusca!=NULL; auxBusca = auxBusca->proximo) {
                         if(auxBusca->quantidade == qnt) {
@@ -395,13 +427,15 @@ void buscarProdutos(ListProduto *produtos) {
                         }
                     }
                     if(achou){
-                        printf("Produto não encontrado!\n");
+                        linha();
+                        center_print("Produto não encontrado!",50);
                     }
                 }
                 break;
 
             default:
-                printf("Opção invalida!\n");
+                linha();
+                center_print("Opção Invalida !",50);
                 break;
         }
     }
@@ -412,13 +446,16 @@ void listarCarrinho(ListCarrinho *carrinho){
     Carrinho *aux;
     double total = 0;
     if(carrinhoNulo(carrinho)){
-        printf("\tCarrinho está vaziu!\n");
+        linha();
+        center_print("Carrinho está vaziu!",50);
     }else {
         for (aux = carrinho->primeiro; aux != NULL; aux = aux->proximo){
             total += (aux->preco * aux->quantidadeCarrinho);
             printf("%d %d %.2lf\n", aux->idCarrinho, aux->quantidadeCarrinho, aux->preco);
         }
+        linha();
         printf("\tTotal a pagar: R$ %.2lf\n", total);
+        linha();
     }
 }
 
@@ -486,12 +523,12 @@ Carrinho *infoCarrinho(int id, int qnt, double preco){
 
 void inserirProdutoCarrinho(ListProduto *produtos, ListCarrinho *carrinho){
     int id, qnt;
-    printf("-------------------------------------\n");
+    linha();
     printf("Digite o ID: ");
     scanf("%d", &id);
     printf("\n");
  
-    printf("-------------------------------------\n");
+    linha();
     printf("Digite a Quantidade do Produto: ");
     scanf("%d", &qnt);
     printf("\n");
@@ -511,7 +548,8 @@ void inserirProdutoCarrinho(ListProduto *produtos, ListCarrinho *carrinho){
             }
         }
     }else {
-        printf("Produto não cadastrado\n");
+        linha();
+        center_print("Produto não cadastrado",50);
     }
 }
 
@@ -570,18 +608,19 @@ void finalizarCompra(ListProduto *produtos, ListCarrinho *carrinho){
             }
         }
     }
-    printf("Compra finalizada com sucesso!\n");
+    linha();
+    center_print("Compra finalizada com sucesso!",50);
 }
 
 
 void removerProdutoCarrinho(ListProduto *produtos, ListCarrinho *carrinho){
     int id, qnt;
-    printf("-------------------------------------\n");
+    linha();
     printf("Digite o ID: ");
     scanf("%d", &id);
     printf("\n");
  
-    printf("-------------------------------------\n");
+    linha();
     printf("Digite a Quantidade do Produto: ");
     scanf("%d", &qnt);
     printf("\n");
@@ -593,7 +632,8 @@ void removerProdutoCarrinho(ListProduto *produtos, ListCarrinho *carrinho){
         verificarEstoque(produtos, id, (-qnt));
         removerCarrinho(carrinho, id);
     }else{
-        printf("Id não encontrado\n");
+        linha();
+        center_print("Id não encontrado",50);
     }
 }
 
@@ -603,49 +643,50 @@ void mainCarrinho(ListProduto *produtos, ListCarrinho *carrinho){
 
     while(opt != 0) {
         menuCarrinho();
+        printf("Opção: ");
         scanf("%d", &opt);
-        printf("-------------------------------------\n");
+        linha();
         switch(opt) {
         
         case 0:
             printf("\n\n\n");
-            printf("-------------------------------------\n");
-            printf("\t  Voltar ao Menu Principal\n");
-            printf("-------------------------------------\n");
+            linha();
+            center_print("Voltar ao Menu Principal",50);
+            linha();
             break;
 
         case 1:
             printf("\n\n\n");
-            printf("-------------------------------------\n");
-            printf("\t  Inserir Produto no Carrinho\n");
+            linha();
+            center_print("Inserir Produto no Carrinho",50);
             inserirProdutoCarrinho(produtos, carrinho);
             break;
         
         case 2:
             printf("\n\n\n");
-            printf("-------------------------------------\n");
-            printf("\t   Remover Produto do Carrinho\n");
+            linha();
+            center_print("Remover Produto do Carrinho",50);
             removerProdutoCarrinho(produtos, carrinho);
             break;
         
         case 3:
             printf("\n\n\n");
-            printf("-------------------------------------\n");
-            printf("\t   Consultar Carrinho\n");
+            linha();
+            center_print("Consultar Carrinho",50);
             listarCarrinho(carrinho);
             break;
 
         case 4:        
             printf("\n\n\n");
-            printf("-------------------------------------\n");
-            printf("\t   Finalizar Compra\n");
+            linha();
+            center_print("Finalizar Compra",50);
             finalizarCompra(produtos, carrinho);
             break;
 
         default:
             printf("\n\n\n");
-            printf("-------------------------------------\n");
-            printf("\t  Opção Invalida!!!\n");
+            linha();
+            center_print("Opção Invalida!!!",50);
             break;
         }
     }
@@ -693,59 +734,61 @@ int main() {
 
     while(opt != 0) {
         menu();
+        printf("Opção: ");
         scanf("%d", &opt);
-        printf("-------------------------------------\n");
+        linha();
 
         
         switch(opt) {
         
         case 0:
             printf("\n\n\n");
-            printf("-------------------------------------\n");
-            printf("\t  Sair do Sistema!\n");
-            printf("-------------------------------------\n");
+            linha();
+            center_print("Sair do Sistema!",50);
+            linha();
             limparMemoria(produtos, carrinho);
             break;
 
         case 1:
             printf("\n\n\n");
-            printf("-------------------------------------\n");
-            printf("\t  Cadastrar Produtos\n");
+            linha();
+            center_print("Cadastrar Produtos",50);
             cadastroProdutos(produtos);
             break;
         
         case 2:
             printf("\n\n\n");
-            printf("-------------------------------------\n");
-            printf("\t   Listar Produtos\n");
+            linha();
+            center_print("Listar Produtos",50);
             listarProdutos(produtos);
             break;
         
         case 3:
             printf("\n\n\n");
-            printf("-------------------------------------\n");
-            printf("\t   Buscar Produtos\n");
+            linha();
+            center_print("Buscar Produtos",50);
             buscarProdutos(produtos);
             break;
 
         case 4:        
             printf("\n\n\n");
-            printf("-------------------------------------\n");
-            printf("\t   Deletar Produtos\n");
+            linha();
+            center_print("Deletar Produtos",50);
+            linha();
             excluirProdutos(produtos);
             break;
 
         case 5:
             printf("\n\n\n");
-            printf("-------------------------------------\n");
-            printf("\t   Comprar Produtos\n");
+            linha();
+            center_print("Comprar Produtos",50);
             mainCarrinho(produtos, carrinho);
             break;
 
         default:
             printf("\n\n\n");
-            printf("-------------------------------------\n");
-            printf("\t  Opção Invalida!!!\n");
+            linha();
+            center_print("Opção Invalida!!!",50);
             break;
         }
     }
