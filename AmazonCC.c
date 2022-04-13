@@ -457,16 +457,15 @@ void listarCarrinho(ListCarrinho *carrinho){
     if(carrinhoNulo(carrinho)){
         linha();
         center_print("Carrinho está vazio!",50);
-        
     }else {
         for (aux = carrinho->primeiro; aux != NULL; aux = aux->proximo){
             total += (aux->preco * aux->quantidadeCarrinho);
             printf(" Id: %d\n Descrição: %s\n Preço: %.2lf\n Quantidade: %d\n", aux->idCarrinho, aux->nome, aux->preco, aux->quantidadeCarrinho);
             linha();
         }
-        
         printf("\tTotal a pagar: R$ %.2lf\n", total);
         linha();
+
     }
 }
 
@@ -620,8 +619,10 @@ void finalizarCompra(ListProduto *produtos, ListCarrinho *carrinho){
             }
         }
     }
+
     linha();
     center_print("Compra finalizada com sucesso!",50);
+
 }
 
 
@@ -692,9 +693,11 @@ void mainCarrinho(ListProduto *produtos, ListCarrinho *carrinho){
 
         case 4:        
             printf("\n\n\n");
+
             linha();
             center_print("Finalizar Compra",50);
             linha();
+
             finalizarCompra(produtos, carrinho);
             break;
 
