@@ -5,6 +5,7 @@
 #define TRUE 1
 #define FALSE 0
 
+// Cria a Struct do Produto
 struct _Produto {
     int id;
     char nome[255];
@@ -16,12 +17,14 @@ struct _Produto {
 };
 typedef struct _Produto Produto;
 
+// Crio a Struct com os Ponteiros First e Tail do Produto
 typedef struct {
     Produto *primeiro;
     Produto *ultimo;
 
 } ListProduto;
 
+// Crio a Struct do Carrinho
 struct _Carrinho {
     int idCarrinho;
     int quantidadeCarrinho;
@@ -33,37 +36,34 @@ struct _Carrinho {
 };
 typedef struct _Carrinho Carrinho;
 
+// Crio a Struct com os Ponteiros First e Tail do Carrinho
 typedef struct {
     Carrinho *primeiro;
     Carrinho *ultimo;
 
 } ListCarrinho;
 
-
-void center_print(const char *s, int width){
+// Função que Alinha os Printf
+void center_print(const char *s, int width) {
     int length = strlen(s);
     int i;
-    for (i=0; i<=(width-length)/2; i++) {
+    for(i=0; i<=(width-length)/2; i++) {
             fputs(" ", stdout);
     }
     fputs(s, stdout);
     i += length;
-    for (; i<=width; i++) {
+    for(; i<=width; i++) {
             fputs(" ", stdout);
     }
     printf("\n");
 }
 
-
-void linha(){
+// Meio Obvio mas é a Função que Printf a Linha
+void linha() {
     printf("--------------------------------------------------\n");
 }
 
-
-
-// void table() {}
-
-
+// Função que Mostra o Menu Principal
 void menu() {
     linha();
     center_print("Amazon CC",50);
@@ -88,7 +88,7 @@ void menu() {
     linha();
 }
 
-
+// Função do Menu de Listar
 void menuListar() {
     linha();
     center_print("Amazon CC",50);
@@ -104,7 +104,7 @@ void menuListar() {
     linha();
 }
 
-
+// Função do Menu de Buscar
 void menuBuscar() {
     linha();
     center_print("Amazon CC",50);
@@ -126,7 +126,7 @@ void menuBuscar() {
     linha();
 }
 
-
+// Função do Menu do Carrinho
 void menuCarrinho() {
     linha();
     center_print("Amazon CC",50);
@@ -148,7 +148,7 @@ void menuCarrinho() {
     linha();
 }
 
-
+// Função que Verifica se a Lista de Produtos esta NULL
 int produtosNulo(ListProduto *produtos) {
     if(produtos->primeiro == NULL) {
         return TRUE;
@@ -157,7 +157,7 @@ int produtosNulo(ListProduto *produtos) {
     }
 }
 
-
+// Função que Verificar se o Carrinho esta NULL
 int carrinhoNulo(ListCarrinho *carrinho) {
     if(carrinho->primeiro == NULL) {
         return 1;
@@ -166,8 +166,8 @@ int carrinhoNulo(ListCarrinho *carrinho) {
     }
 }
 
-
-Produto *infoProdutos(){
+// Função que pega o Input dos Dados do Produto
+Produto *infoProdutos() {
     Produto *novoProduto = (Produto*)malloc(sizeof(Produto));
 
     linha();
@@ -195,17 +195,19 @@ Produto *infoProdutos(){
     return novoProduto;
 }
 
-
+// Função que Cadastra os Produtos
 void cadastroProdutos(ListProduto *produtos) {  
     Produto *aux = infoProdutos();
     Produto *auxFor;
     int inseriu = 0;
 
+    // Insere no Inicio
     if(produtos->primeiro == NULL && produtos->ultimo == NULL) {
         produtos->primeiro = aux;
         produtos->ultimo = aux;
     }else {
         for(auxFor = produtos->primeiro; auxFor != NULL; auxFor = auxFor->proximo) {
+            // Verifica se o ID já Existe
             if(auxFor->id == aux->id) {
                 linha();
                 center_print("ID invalido",50);
@@ -236,36 +238,37 @@ void cadastroProdutos(ListProduto *produtos) {
     }
     linha();
     center_print("Produto cadastrado com sucesso!",50);
-    linha();    
 }
 
-
-void excluirProdutos(ListProduto * produtos){
+// Função de Excluir os Produtos
+void excluirProdutos(ListProduto * produtos) {
     int id;
     printf("Digite o ID a ser excluido: ");
     scanf("%d", &id);
     Produto *auxFor;
-    for(auxFor = produtos->primeiro; auxFor != NULL; auxFor = auxFor->proximo){
-        if(auxFor->id == id){
+    for(auxFor = produtos->primeiro; auxFor != NULL; auxFor = auxFor->proximo) {
+        // Verifica se o ID do Produto esta na lista
+        if(auxFor->id == id) {
             linha();
             center_print("Produto deletado com sucesso!",50);
             linha();
-            if(auxFor == produtos->primeiro && auxFor == produtos->ultimo){
+            printf("\n\n");
+            if(auxFor == produtos->primeiro && auxFor == produtos->ultimo) {
                 produtos->primeiro = NULL;
                 produtos->ultimo = NULL;
                 free(auxFor);
                 return;
-            }else if(auxFor == produtos->primeiro){
+            }else if(auxFor == produtos->primeiro) {
                 auxFor->proximo->anterior = NULL;
                 produtos->primeiro = auxFor->proximo;
                 free(auxFor);
                 return;
-            }else if(auxFor == produtos->ultimo){
+            }else if(auxFor == produtos->ultimo) {
                 auxFor->anterior->proximo = NULL;
                 produtos->ultimo = auxFor->anterior;
                 free(auxFor);
                 return;
-            }else{
+            }else {
                 auxFor->anterior->proximo = auxFor->proximo;
                 auxFor->proximo->anterior = auxFor->anterior;
                 free(auxFor);
@@ -279,7 +282,7 @@ void excluirProdutos(ListProduto * produtos){
     
 }
 
-
+// Função que Lista os Produtos ja Cadastrados
 void listarProdutos(ListProduto *produtos) {
     int opt = 9;
 
@@ -297,15 +300,18 @@ void listarProdutos(ListProduto *produtos) {
                 linha();
                 center_print("Listar em Ordem Crescente",50);
                 Produto *aux1 = produtos->primeiro;
+                // Verifica se esta Vazia
                 if(produtosNulo(produtos)) {
                     linha();
                     center_print("Lista Vazia!",50);
                 }else {
                     linha();
+                    // Printf em ordem Crescente
                     for(aux1; aux1!=NULL; aux1=aux1->proximo) {
                         printf(" Id: %d\n Descrição: %s\n Preço: %.2lf\n Quantidade: %d\n", aux1->id, aux1->nome, aux1->preco, aux1->quantidade);
                         linha();
                     }
+                    printf("\n\n\n");
                 }
                 break;
             
@@ -313,15 +319,18 @@ void listarProdutos(ListProduto *produtos) {
                 linha();
                 center_print("Listar em Ordem Decrescente",50);
                 Produto *aux2 = produtos->ultimo;
+                // Verifica se esta Vazia
                 if(produtosNulo(produtos)) {
                     linha();
                     center_print("Lista Vazia!",50);
                 }else {
                     linha();
+                    //  Printf em Ordem Decrescente
                     for(aux2; aux2!=NULL; aux2=aux2->anterior) {
                         printf(" Id: %d\n Descrição: %s\n Preço: %.2lf\n Quantidade: %d\n", aux2->id, aux2->nome, aux2->preco, aux2->quantidade);
                         linha();
                     }
+                    printf("\n\n\n");
                 }
                 break;
 
@@ -334,7 +343,7 @@ void listarProdutos(ListProduto *produtos) {
     }
 }
 
-
+// Função que Busca os Produtos
 void buscarProdutos(ListProduto *produtos) {
     int opt = 9;
     int achou;
@@ -356,17 +365,22 @@ void buscarProdutos(ListProduto *produtos) {
                 int pk;
                 achou = 1;
                 scanf("%d", &pk);
+                printf("\n");
+                // Verifica NULL
                 if(produtosNulo(produtos)) {
                     linha();
                     center_print("Lista Vazia!",50);
                 }else {
+                    // Busca por ID
                     for(auxBusca = produtos->primeiro; auxBusca!=NULL; auxBusca = auxBusca->proximo) {
                         if(auxBusca->id == pk) {
                             achou = 0;
                             printf(" Id: %d\n Descrição: %s\n Preço: %.2lf\n Quantidade: %d\n", auxBusca->id, auxBusca->nome, auxBusca->preco, auxBusca->quantidade);
                         }
+
                     }
-                    if(achou){
+                    // Caso não Existir o Produto
+                    if(achou) {
                         linha();
                         center_print("Produto não encontrado!",50);
                     }
@@ -377,18 +391,23 @@ void buscarProdutos(ListProduto *produtos) {
                 printf("Buscar por Nome\n");
                 printf("Digite o nome: ");
                 scanf("%s", nome);
+                printf("\n");
                 achou = 1;
+                // Verifica NULL
                 if(produtosNulo(produtos)) {
                     linha();
                     center_print("Lista Vazia!",50);
                 }else {
+                    // Busca por Nome
                     for(auxBusca = produtos->primeiro; auxBusca!=NULL; auxBusca = auxBusca->proximo) {
                         if(strcmp(auxBusca->nome, nome) == 0) {
                             achou = 0;
                             printf(" Id: %d\n Descrição: %s\n Preço: %.2lf\n Quantidade: %d\n", auxBusca->id, auxBusca->nome, auxBusca->preco, auxBusca->quantidade);
+                            linha();
                         }
                     }
-                    if(achou){
+                    // Caso não Existir o Produto
+                    if(achou) {
                         linha();
                         center_print("Produto não encontrado!",50);
                     }
@@ -401,17 +420,22 @@ void buscarProdutos(ListProduto *produtos) {
                 double preco;
                 achou = 1;
                 scanf("%lf", &preco);
+                printf("\n");
+                // Verifica NULL
                 if(produtosNulo(produtos)) {
                     linha();
                     center_print("Lista Vazia!",50);
                 }else {
+                    // Busca por Preço
                     for(auxBusca = produtos->primeiro; auxBusca!=NULL; auxBusca = auxBusca->proximo) {
                         if(auxBusca->preco == preco) {
                             achou = 0;
                             printf(" Id: %d\n Descrição: %s\n Preço: %.2lf\n Quantidade: %d\n", auxBusca->id, auxBusca->nome, auxBusca->preco, auxBusca->quantidade);
+                            linha();
                             return;
                         }
                     }
+                    // Caso não Existir o Produto
                     if(achou){
                         linha();
                         center_print("Produto não encontrado!",50);
@@ -425,17 +449,22 @@ void buscarProdutos(ListProduto *produtos) {
                 int qnt;
                 achou = 1;
                 scanf("%d", &qnt);
+                printf("\n");
+                // Verifica NULL
                 if(produtosNulo(produtos)) {
                     linha();
                     center_print("Lista Vazia!",50);
                 }else {
+                    // Busca por Quantidade
                     for(auxBusca = produtos->primeiro; auxBusca!=NULL; auxBusca = auxBusca->proximo) {
                         if(auxBusca->quantidade == qnt) {
                             achou = 0;
                             printf(" Id: %d\n Descrição: %s\n Preço: %.2lf\n Quantidade: %d\n", auxBusca->id, auxBusca->nome, auxBusca->preco, auxBusca->quantidade);
+                            linha();
                         }
                     }
-                    if(achou){
+                    // Caso não Existir o Produto
+                    if(achou) {
                         linha();
                         center_print("Produto não encontrado!",50);
                     }
@@ -450,30 +479,33 @@ void buscarProdutos(ListProduto *produtos) {
     }
 }
 
-
-void listarCarrinho(ListCarrinho *carrinho){
+// Função que Mostra o Carrinho
+void listarCarrinho(ListCarrinho *carrinho) {
     Carrinho *aux;
     double total = 0;
-    if(carrinhoNulo(carrinho)){
+    // Verifica NULL
+    if(carrinhoNulo(carrinho)) {
         linha();
         center_print("Carrinho está vazio!",50);
+        
     }else {
-        for (aux = carrinho->primeiro; aux != NULL; aux = aux->proximo){
+        // Gera o Valor Total
+        for(aux = carrinho->primeiro; aux != NULL; aux = aux->proximo) {
             total += (aux->preco * aux->quantidadeCarrinho);
             printf(" Id: %d\n Descrição: %s\n Preço: %.2lf\n Quantidade: %d\n", aux->idCarrinho, aux->nome, aux->preco, aux->quantidadeCarrinho);
             linha();
         }
+        
         printf("\tTotal a pagar: R$ %.2lf\n", total);
-        linha();
-
     }
 }
 
-
-int verificarEstoque(ListProduto *produtos, int id, int qnt){
+// Função que Verifica o Estoque
+int verificarEstoque(ListProduto *produtos, int id, int qnt) { 
     Produto *auxFor;
-    for (auxFor = produtos->primeiro; auxFor != NULL; auxFor = auxFor->proximo){
-        if(id == auxFor->id && qnt <= auxFor->quantidade && (auxFor->quantidade - qnt) >= 0){
+    // Compara se tem Estoque Suficiente
+    for(auxFor = produtos->primeiro; auxFor != NULL; auxFor = auxFor->proximo) {
+        if(id == auxFor->id && qnt <= auxFor->quantidade && (auxFor->quantidade - qnt) >= 0) {
             auxFor->quantidade -= qnt;
             return 1;
         }
@@ -481,11 +513,12 @@ int verificarEstoque(ListProduto *produtos, int id, int qnt){
     return 0;
 }
 
-
-int verificarCarrinho(ListCarrinho *carrinho, int id, int qnt){
+// Função que Verifica o Carrinho
+int verificarCarrinho(ListCarrinho *carrinho, int id, int qnt) {
     Carrinho *auxFor;
-    for (auxFor = carrinho->primeiro; auxFor != NULL; auxFor = auxFor->proximo){
-        if(id == auxFor->idCarrinho && (auxFor->quantidadeCarrinho + qnt) >= 0){
+    // Verifica o ID e a Quantidade para Adicionar no Carrinho
+    for(auxFor = carrinho->primeiro; auxFor != NULL; auxFor = auxFor->proximo) {
+        if(id == auxFor->idCarrinho && (auxFor->quantidadeCarrinho + qnt) >= 0) {
             auxFor->quantidadeCarrinho += qnt;
             return 1;
         }
@@ -493,14 +526,16 @@ int verificarCarrinho(ListCarrinho *carrinho, int id, int qnt){
     return 0;
 }
 
-
-int verificarCarrinhoRemover(ListCarrinho *carrinho, int id, int qnt){
+// Função que Verifica o Item para Remove do Carrinho
+int verificarCarrinhoRemover(ListCarrinho *carrinho, int id, int qnt) {
     Carrinho *auxFor;
-    for (auxFor = carrinho->primeiro; auxFor != NULL; auxFor = auxFor->proximo){
-        if(id == auxFor->idCarrinho && (auxFor->quantidadeCarrinho - qnt) > 0){
+    for(auxFor = carrinho->primeiro; auxFor != NULL; auxFor = auxFor->proximo) {
+        // Quando Ainda Sobra Quantidade
+        if(id == auxFor->idCarrinho && (auxFor->quantidadeCarrinho - qnt) > 0) {
             auxFor->quantidadeCarrinho -= qnt;
             return 1;
-        }else if (id == auxFor->idCarrinho && (auxFor->quantidadeCarrinho - qnt) == 0){
+        // Quando Remove Todo o Produto
+        }else if(id == auxFor->idCarrinho && (auxFor->quantidadeCarrinho - qnt) == 0) {
             auxFor->quantidadeCarrinho -= qnt;
             return 2;
         }
@@ -508,19 +543,20 @@ int verificarCarrinhoRemover(ListCarrinho *carrinho, int id, int qnt){
     return 0;
 }
 
-
-Produto *verificarPrecoProduto(ListProduto *produtos, int id){
+// Função que Verifica o Preço do Produto
+Produto *verificarPrecoProduto(ListProduto *produtos, int id) {
     Produto *auxFor;
-    for (auxFor = produtos->primeiro; auxFor != NULL; auxFor = auxFor->proximo){
-        if(id == auxFor->id){
+    // Retorna o Produto
+    for(auxFor = produtos->primeiro; auxFor != NULL; auxFor = auxFor->proximo) {
+        if(id == auxFor->id) {
             return auxFor;
         }
     }
     return 0;
 }
 
-
-Carrinho *infoCarrinho(int id, char nome[255], int qnt, double preco){
+// Função das Informações do Produto para Inserir o Produto
+Carrinho *infoCarrinho(int id, char nome[255], int qnt, double preco) { 
     Carrinho *novoElemento = (Carrinho*)malloc(sizeof(Carrinho));
     novoElemento->idCarrinho = id;
     strcpy(novoElemento->nome, nome);
@@ -531,8 +567,8 @@ Carrinho *infoCarrinho(int id, char nome[255], int qnt, double preco){
     return novoElemento;
 }
 
-
-void inserirProdutoCarrinho(ListProduto *produtos, ListCarrinho *carrinho){
+// Função que Inser o Produto no Carrinho
+void inserirProdutoCarrinho(ListProduto *produtos, ListCarrinho *carrinho) {
     int id, qnt;
     linha();
     printf("Digite o ID: ");
@@ -544,11 +580,12 @@ void inserirProdutoCarrinho(ListProduto *produtos, ListCarrinho *carrinho){
     scanf("%d", &qnt);
     printf("\n");
     if(verificarEstoque(produtos, id, qnt)) {
-        if(verificarCarrinho(carrinho, id, qnt)){
+        if(verificarCarrinho(carrinho, id, qnt)) {
             return;
         }else {
             Produto *aux2 = verificarPrecoProduto(produtos, id);
             Carrinho *aux = infoCarrinho(id, aux2->nome, qnt, aux2->preco);
+            // Verifica se é o Primeiro
             if(carrinho->primeiro == NULL && carrinho->ultimo == NULL) {
                 carrinho->primeiro = aux;
                 carrinho->ultimo = aux;
@@ -564,27 +601,27 @@ void inserirProdutoCarrinho(ListProduto *produtos, ListCarrinho *carrinho){
     }
 }
 
-
-void removerCarrinho(ListCarrinho *carrinho, int id){
+// Função que Remove os Produtos do Carrinho
+void removerCarrinho(ListCarrinho *carrinho, int id) {
     Carrinho *auxFor;
-    for(auxFor = carrinho->primeiro; auxFor != NULL; auxFor = auxFor->proximo){
+    for(auxFor = carrinho->primeiro; auxFor != NULL; auxFor = auxFor->proximo) {
         if(auxFor->idCarrinho == id){
-            if(auxFor == carrinho->primeiro && auxFor == carrinho->ultimo){
+            if(auxFor == carrinho->primeiro && auxFor == carrinho->ultimo) {
                 carrinho->primeiro = NULL;
                 carrinho->ultimo = NULL;
                 free(auxFor);
-                return;
-            }else if(auxFor == carrinho->primeiro){
+                return; 
+            }else if(auxFor == carrinho->primeiro) {  
                 auxFor->proximo->anterior = NULL;
                 carrinho->primeiro = auxFor->proximo;
                 free(auxFor);
                 return;
-            }else if(auxFor == carrinho->ultimo){
+            }else if(auxFor == carrinho->ultimo) {
                 auxFor->anterior->proximo = NULL;
                 carrinho->ultimo = auxFor->anterior;
                 free(auxFor);
                 return;
-            }else{
+            }else {
                 auxFor->anterior->proximo = auxFor->proximo;
                 auxFor->proximo->anterior = auxFor->anterior;
                 free(auxFor);
@@ -595,38 +632,55 @@ void removerCarrinho(ListCarrinho *carrinho, int id){
 }
 
 
-void finalizarCompra(ListProduto *produtos, ListCarrinho *carrinho){
+// Função que Limpa o Carrinho
+void limparCarrinho(ListCarrinho *carrinho) {
+    Carrinho *auxForc = carrinho->primeiro;
+    Carrinho *anteriorc;
+    // Free em todos os elementos do carrinho
+    while(auxForc != NULL) {
+        anteriorc = auxForc;
+        auxForc = auxForc->proximo;
+        free(anteriorc);
+    }
+    carrinho->primeiro = NULL;
+    carrinho->ultimo = NULL;
+}
+
+
+// Função que Finaliza a Compra
+void finalizarCompra(ListProduto *produtos, ListCarrinho *carrinho) {
     limparCarrinho(carrinho);
     Produto *auxFor;
-    for(auxFor = produtos->primeiro; auxFor != NULL; auxFor = auxFor->proximo){
-        if(auxFor->quantidade == 0){
-            if(auxFor == produtos->primeiro && auxFor == produtos->ultimo){
+    for(auxFor = produtos->primeiro; auxFor != NULL; auxFor = auxFor->proximo) {
+        if(auxFor->quantidade == 0) {
+            // Quando possui so um Elemento
+            if(auxFor == produtos->primeiro && auxFor == produtos->ultimo) {
                 produtos->primeiro = NULL;
                 produtos->ultimo = NULL;
                 free(auxFor);
-            }else if(auxFor == produtos->primeiro){
+            // QUando o Elemento é o Primeiro
+            }else if(auxFor == produtos->primeiro) {
                 auxFor->proximo->anterior = NULL;
                 produtos->primeiro = auxFor->proximo;
                 free(auxFor);
-            }else if(auxFor == produtos->ultimo){
+            // Quando o Elemento é o Ultimo
+            }else if(auxFor == produtos->ultimo) {
                 auxFor->anterior->proximo = NULL;
                 produtos->ultimo = auxFor->anterior;
                 free(auxFor);
-            }else{
+            // Quando o Elemento é no Meio
+            }else {
                 auxFor->anterior->proximo = auxFor->proximo;
                 auxFor->proximo->anterior = auxFor->anterior;
                 free(auxFor);
             }
         }
     }
-
-    linha();
     center_print("Compra finalizada com sucesso!",50);
-
 }
 
-
-void removerProdutoCarrinho(ListProduto *produtos, ListCarrinho *carrinho){
+// Função que Remove os Produtos do Carrinho
+void removerProdutoCarrinho(ListProduto *produtos, ListCarrinho *carrinho) { 
     int id, qnt;
     linha();
     printf("Digite o ID: ");
@@ -637,21 +691,38 @@ void removerProdutoCarrinho(ListProduto *produtos, ListCarrinho *carrinho){
     printf("Digite a Quantidade do Produto: ");
     scanf("%d", &qnt);
     printf("\n");
+
     int flag = verificarCarrinhoRemover(carrinho, id, qnt);
-    if(flag == 1){
+    if(flag == 1) {
         verificarEstoque(produtos, id, (-qnt));
         return;
-    }else if (flag == 2){
+    }else if(flag == 2) {
         verificarEstoque(produtos, id, (-qnt));
         removerCarrinho(carrinho, id);
-    }else{
+    }else {
         linha();
         center_print("Id não encontrado",50);
     }
 }
 
 
-void mainCarrinho(ListProduto *produtos, ListCarrinho *carrinho){
+// Função que Limpa a Memoria
+void limparMemoria(ListProduto *produtos, ListCarrinho *carrinho) {
+    // limpa o carrinho
+    limparCarrinho(carrinho);
+    // Free em todos os produtos
+    Produto *auxFor = produtos->primeiro;
+    Produto *anterior;
+    while(auxFor != NULL) {
+        anterior = auxFor;
+        auxFor = auxFor->proximo;
+        free(anterior);
+    }
+}
+
+
+// Função do Menu do carrinho
+void mainCarrinho(ListProduto *produtos, ListCarrinho *carrinho) {
     int opt = 9;
 
     while(opt != 0) {
@@ -679,7 +750,6 @@ void mainCarrinho(ListProduto *produtos, ListCarrinho *carrinho){
             printf("\n\n\n");
             linha();
             center_print("Remover Produto do Carrinho",50);
-            linha();
             removerProdutoCarrinho(produtos, carrinho);
             break;
         
@@ -687,17 +757,14 @@ void mainCarrinho(ListProduto *produtos, ListCarrinho *carrinho){
             printf("\n\n\n");
             linha();
             center_print("Consultar Carrinho",50);
-            linha();
             listarCarrinho(carrinho);
             break;
 
         case 4:        
             printf("\n\n\n");
-
             linha();
             center_print("Finalizar Compra",50);
             linha();
-
             finalizarCompra(produtos, carrinho);
             break;
 
@@ -705,7 +772,6 @@ void mainCarrinho(ListProduto *produtos, ListCarrinho *carrinho){
             printf("\n\n\n");
             linha();
             center_print("Opção Invalida!!!",50);
-            linha();
             break;
         }
     }
@@ -713,32 +779,7 @@ void mainCarrinho(ListProduto *produtos, ListCarrinho *carrinho){
 }
 
 
-void limparCarrinho(ListCarrinho *carrinho){
-    Carrinho *auxForc = carrinho->primeiro;
-    Carrinho *anteriorc;
-    while(auxForc != NULL){
-        anteriorc = auxForc;
-        auxForc = auxForc->proximo;
-        free(anteriorc);
-    }
-    carrinho->primeiro = NULL;
-    carrinho->ultimo = NULL;
-}
-
-
-void limparMemoria(ListProduto *produtos, ListCarrinho *carrinho){
-    limparCarrinho(carrinho);
-
-    Produto *auxFor = produtos->primeiro;
-    Produto *anterior;
-    while(auxFor != NULL){
-        anterior = auxFor;
-        auxFor = auxFor->proximo;
-        free(anterior);
-    }
-}
-
-
+// Função MAIN
 int main() {
     int opt = 9;
     ListCarrinho *carrinho = malloc(sizeof(ListCarrinho));
